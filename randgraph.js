@@ -76,47 +76,46 @@ var windowLoad = (function() {
   function init() {
     console.log("windowLoad.init()");
     _randgraph_init();
-    _randgraph();
+    _randgraph_gen();
+    _randgraph_draw();
   };
   
-  function _randgraph() {
+  function _randgraph_draw() {
+    for(var i=0; i<_graph.vertices.length; i++) {
+      var posx = _graph.vertices[i].posx, posy = _graph.vertices[i].posy;
+      _doc.context.beginPath();
+      _doc.context.moveTo(posx-1,posy);
+      _doc.context.lineTo(posx,posy);
+      _doc.context.lineWidth = 10;
+      _doc.context.lineCap = 'round';
+      _doc.context.stroke();
+    }
+    for(var i=0; i<_graph.edges.length; i++) {
+      _doc.context.beginPath();
+      _doc.context.moveTo(_graph.edges[i].verta.posx,_graph.edges[i].verta.posy);
+      _doc.context.lineTo(_graph.edges[i].vertb.posx,_graph.edges[i].vertb.posy);
+      _doc.context.lineWidth = 2;
+      _doc.context.stroke();
+    }
+  };
+  
+  function _randgraph_gen() {
     // vertices
     for(var i=0; i<_graph.n; i++) {
       var vertex = new _Vertex();
       vertex.id = i;
-      vertex.posx = _rand(0,_doc.canvas.height*2);
-      vertex.posy = _rand(0,_doc.canvas.width*2);
+      vertex.posx = _rand(0,_doc.canvas.width);
+      vertex.posy = _rand(0,_doc.canvas.height);
+      //debug1
       console.log('vert:id['+vertex.id+']px['+vertex.posx+']py['+vertex.posy+']');
       _graph.vertices.push(vertex);
     }
-    // edge calculation based on number of vertices (okay)
-    /*
-    var edges = _calc_edge(_graph.n);
-    for(var i=0; i<edges; i++) {
-      var edge = new Edge();
-      edge.id = i;
-      edge.verta = null;
-      edge.vertb = null;
-      edge.weight = 0;
-      _graph.edges.push();
-    }
-    */
-    // edge calculation based on extant vertices in array (better)
+    // edge calculation based on extant vertices in array
     // (for each pair of vertices, traverse edges to detect duplication)
     var place = true;
-    //debug1
-    alert('vert.len['+_graph.vertices.length+']edges.len['+_graph.edges.length+']');
     for(var i=0; i<_graph.vertices.length; i++) {
-      //debug1
-      alert('i['+i+']');
       for(var j=0; j<_graph.vertices.length; j++) {
-        //debug1
-        alert('j['+j+']');
         for(var k=0; k<_graph.edges.length; k++) {
-          //debug1
-          alert('i['+i+']j['+j+']k['+k+']');
-          //debug1
-          alert('edges['+k+']verta?['+(_graph.edges[k].verta)+']vertb?['+(_graph.edges[k].vertb)+']');
           // conditions invalidating placement of new edge
           if( ((_graph.edges[k].verta == _graph.vertices[i]) && (_graph.edges[k].vertb == _graph.vertices[j])) || 
             ((_graph.edges[k].verta == _graph.vertices[j]) && (_graph.edges[k].vertb == _graph.vertices[i])) ) {
@@ -127,41 +126,17 @@ var windowLoad = (function() {
         if(_graph.vertices[i] == _graph.vertices[j]) { place = false; }
         // otherwise, create a new edge and plunk 'er down!
         if(place) {
-          //debug1
-          alert('**** edge!!! i['+i+']j['+j+']');
           var edge = new _Edge();
           edge.id = _graph.edges.length;
-          //debug1
-          alert('**** --> id['+edge.id+']');
           edge.verta = _graph.vertices[i];
-          //debug1
-          alert('**** --> vert.i['+edge.verta+']');
           edge.vertb = _graph.vertices[j];
-          //debug1
-          alert('**** --> vert.j['+edge.vertb+']');
           edge.weight = _calc_weight(edge.verta, edge.vertb);
-          //debug1
-          alert('**** --> weight['+edge.weight+']');
           _graph.edges.push(edge);
           continue;
         } else {
           place = true;
         }
       }
-    }
-  };
-  
-  function _randgraph_draw() {
-    for(var i=0; i<_graph.vertices.length; i++) {
-      var posx = _graph.vertices[i].posx, posy = _graph.vertices[i].posy;
-      _doc.context.beginPath();
-      _doc.context.moveTo((posx-1),posy);
-      _doc.context.lineTo((posx+1),posy);
-      _doc.context.lineWidth = 2;
-      _doc.context.lineCap = 'round';
-      _doc.context.stroke();
-    }
-    for(var i=0; i<_graph.edges.length; i++) {
     }
   };
   
