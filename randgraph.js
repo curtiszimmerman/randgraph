@@ -18,6 +18,7 @@ var windowLoad = (function() {
       x:0,
       y:0
     };
+    this.slope = 0;
     this.weight = 0;
     this.verta = null;
     this.vertb = null;
@@ -52,10 +53,11 @@ var windowLoad = (function() {
   };
   
   function _calc_weightMidpoint(edge) {
-    // calc the weight and midpoint of the edge between vertices x and y
+    // calc the weight and midpoint of the edge between vertices x and y, as well as slope for nice labels
     var aposx = edge.verta.posx, aposy = edge.verta.posy, bposx = edge.vertb.posx, bposy = edge.vertb.posy;
-    var offsetx = 0, offsety = 0, posx = 0, posy = 0, slope = 0;
+    var offsetx = 0, offsety = 0, posx = 0, posy = 0, slopex = 0, slope = 0;
     if(aposx < bposx) {
+      slopex = 1;
       offsetx = aposx;
       posx = (bposx-aposx);
     } else {
@@ -68,6 +70,11 @@ var windowLoad = (function() {
     } else {
       offsety = bposy;
       posy = (aposy-bposy);
+    }
+    if(slopex) {
+      edge.slope = (bposy-aposy)/(bposx-aposx);
+    } else {
+      edge.slope = (aposy-bposy)/(aposx-bposx);
     }
     if(posx < posy) {
       edge.weight = (posy-posx);
@@ -117,12 +124,18 @@ var windowLoad = (function() {
     for(var i=0; i<_graph.edges.length; i++) {
       var posx = _graph.edges[i].midpoint.x,
         posy = _graph.edges[i].midpoint.y,
+        slope = _graph.edges[i].slope,
         str = _graph.edges[i].weight;
       _doc.context.beginPath();
       _doc.context.moveTo(posx,posy);
-      _doc.context.lineTo(posx+10,posy-10);
+      if(slope < 0) {
+        _doc.context.fillText(str,posx+10,posy+10);
+        _doc.context.lineTo(posx+10,posy+10);
+      } else {
+        _doc.context.fillText(str,posx+10,posy-10);
+        _doc.context.lineTo(posx+10,posy-10);
+      }
       _doc.context.stroke();
-      _doc.context.fillText(str,posx+10,posy-10);
     }
   };
   
