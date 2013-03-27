@@ -76,11 +76,7 @@ var windowLoad = (function() {
     } else {
       edge.slope = (aposy-bposy)/(aposx-bposx);
     }
-    if(posx < posy) {
-      edge.weight = (posy-posx);
-    } else {
-      edge.weight = (posx-posy);
-    }
+    edge.weight = Math.round(Math.sqrt((posx*posx)+(posy*posy)));
     edge.midpoint.x = (offsetx+(posx/2));
     edge.midpoint.y = (offsety+(posy/2));
   };
