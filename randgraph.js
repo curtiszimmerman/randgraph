@@ -92,7 +92,7 @@ var windowLoad = (function() {
         _graph.edges[i].color.b + ');';
       _doc.context.stroke();
     }
-    _doc.context.strokeStyle = 'rgb(0,0,0);';
+    _doc.context.strokeStyle = 'rgb(240,240,240);';
     for(var i=0; i<_graph.vertices.length; i++) {
       var posx = _graph.vertices[i].posx, posy = _graph.vertices[i].posy;
       _doc.context.beginPath();
@@ -153,7 +153,7 @@ var windowLoad = (function() {
     _doc.title = document.getElementById('title');
     _doc.canvas = document.getElementById('canvas');
     _doc.context = canvas.getContext('2d');
-    _doc.title.innerHTML = '<h2>Random Graph Generator (n = '+ _graph.n +')</h2>';
+    _doc.title.innerHTML = '<h2>Complete Graph Generator (n = '+ _graph.n +', random edge weight)</h2>';
   };
   
   function _rand(min, max) {
