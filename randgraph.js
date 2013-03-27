@@ -108,7 +108,6 @@ var windowLoad = (function() {
       _doc.context.stroke();
     }
     _doc.context.font = '10pt Verdana';
-    _doc.context.fillStyle = 'rgb(255,255,255)';
     for(var i=0; i<_graph.edges.length; i++) {
       var posx = _graph.edges[i].midpoint.x,
         posy = _graph.edges[i].midpoint.y,
