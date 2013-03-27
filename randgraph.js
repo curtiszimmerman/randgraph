@@ -53,21 +53,21 @@ var windowLoad = (function() {
   
   function _calc_weightMidpoint(edge) {
     // calc the weight and midpoint of the edge between vertices x and y
-    var xposx = edge.verta.posx, xposy = edge.verta.posy, yposx = edge.vertb.posx, yposy = edge.vertb.posy;
-    var offsetx = 0, offsety = 0, posx = 0, posy = 0;
-    if(xposx < yposx) {
-      offsetx = xposx;
-      posx = (yposx-xposx);
+    var aposx = edge.verta.posx, aposy = edge.verta.posy, bposx = edge.vertb.posx, bposy = edge.vertb.posy;
+    var offsetx = 0, offsety = 0, posx = 0, posy = 0, slope = 0;
+    if(aposx < bposx) {
+      offsetx = aposx;
+      posx = (bposx-aposx);
     } else {
-      offsetx = yposx;
-      posx = (xposx-yposx);
+      offsetx = bposx;
+      posx = (aposx-bposx);
     }
-    if(xposy < yposy) {
-      offsety = xposy;
-      posy = (yposy-xposy);
+    if(aposy < bposy) {
+      offsety = aposy;
+      posy = (bposy-aposy);
     } else {
-      offsety = yposy;
-      posy = (xposy-yposy);
+      offsety = bposy;
+      posy = (aposy-bposy);
     }
     if(posx < posy) {
       edge.weight = (posy-posx);
