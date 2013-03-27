@@ -81,6 +81,18 @@ var windowLoad = (function() {
   };
   
   function _randgraph_draw() {
+    for(var i=0; i<_graph.edges.length; i++) {
+      _doc.context.beginPath();
+      _doc.context.moveTo(_graph.edges[i].verta.posx,_graph.edges[i].verta.posy);
+      _doc.context.lineTo(_graph.edges[i].vertb.posx,_graph.edges[i].vertb.posy);
+      _doc.context.lineWidth = 2;
+      _doc.context.strokeStyle = 'rgb(' +
+        _graph.edges[i].color.r + ',' +
+        _graph.edges[i].color.g + ',' +
+        _graph.edges[i].color.b + ');';
+      _doc.context.stroke();
+    }
+    _doc.context.strokeStyle = 'rgb(0,0,0);';
     for(var i=0; i<_graph.vertices.length; i++) {
       var posx = _graph.vertices[i].posx, posy = _graph.vertices[i].posy;
       _doc.context.beginPath();
@@ -88,13 +100,6 @@ var windowLoad = (function() {
       _doc.context.lineTo(posx,posy);
       _doc.context.lineWidth = 10;
       _doc.context.lineCap = 'round';
-      _doc.context.stroke();
-    }
-    for(var i=0; i<_graph.edges.length; i++) {
-      _doc.context.beginPath();
-      _doc.context.moveTo(_graph.edges[i].verta.posx,_graph.edges[i].verta.posy);
-      _doc.context.lineTo(_graph.edges[i].vertb.posx,_graph.edges[i].vertb.posy);
-      _doc.context.lineWidth = 2;
       _doc.context.stroke();
     }
   };
@@ -131,6 +136,9 @@ var windowLoad = (function() {
           edge.verta = _graph.vertices[i];
           edge.vertb = _graph.vertices[j];
           edge.weight = _calc_weight(edge.verta, edge.vertb);
+          edge.color.r = _rand(0,255);
+          edge.color.g = _rand(0,255);
+          edge.color.b = _rand(0,255);
           _graph.edges.push(edge);
           continue;
         } else {
