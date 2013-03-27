@@ -14,6 +14,10 @@ var windowLoad = (function() {
   /* begin graph-specific objects */
   function _Edge() {
     this.id = 0;
+    this.midpoint = {
+      x:0,
+      y:0
+    };
     this.weight = 0;
     this.verta = null;
     this.vertb = null;
@@ -47,10 +51,10 @@ var windowLoad = (function() {
     return ++edges;
   };
   
-  function _calc_weight(x,y) {
-    // calc the weight of the edge between vertices x and y
-    var xposx = x.posx, xposy = x.posy, yposx = y.posx, yposy = y.posy;
-    var posx = 0, posy = 0;
+  function _calc_weightMidpoint(edge) {
+    // calc the weight and midpoint of the edge between vertices x and y
+    var xposx = edge.verta.posx, xposy = edge.verta.posy, yposx = edge.vertb.posx, yposy = edge.vertb.posy;
+    var midx = 0, midy = 0, posx = 0, posy = 0;
     if(xposx < yposx) {
       posx = (yposx-xposx);
     } else {
@@ -62,10 +66,12 @@ var windowLoad = (function() {
       posy = (xposy-yposy);
     }
     if(posx < posy) {
-      return (posy-posx);
+      edge.weight = (posy-posx);
     } else {
-      return (posx-posy);
+      edge.weight = (posx-posy);
     }
+    edge.midpoint.x = (posx/2);
+    edge.midpoint.y = (posy/2);
   };
 
   function _factorial(n) {
@@ -96,11 +102,17 @@ var windowLoad = (function() {
     for(var i=0; i<_graph.vertices.length; i++) {
       var posx = _graph.vertices[i].posx, posy = _graph.vertices[i].posy;
       _doc.context.beginPath();
-      _doc.context.moveTo(posx-1,posy);
-      _doc.context.lineTo(posx,posy);
-      _doc.context.lineWidth = 10;
+      _doc.context.arc(posx,posy,2,0,(2*Math.PI),false);
+      _doc.context.lineWidth = 4;
       _doc.context.lineCap = 'round';
       _doc.context.stroke();
+    }
+    _doc.context.font = '10pt Verdana';
+    for(var i=0; i<_graph.edges.length; i++) {
+      var posx = _graph.edges[i].verta.posx,
+        posy = _graph.edges[i].posy,
+        str = _graph.edges[i].weight;
+      _doc.context.fillText(str,posx,posy);
     }
   };
   
@@ -135,7 +147,7 @@ var windowLoad = (function() {
           edge.id = _graph.edges.length;
           edge.verta = _graph.vertices[i];
           edge.vertb = _graph.vertices[j];
-          edge.weight = _calc_weight(edge.verta, edge.vertb);
+          _calc_weightMidpoint(edge);
           edge.color.r = _rand(0,255);
           edge.color.g = _rand(0,255);
           edge.color.b = _rand(0,255);
