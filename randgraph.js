@@ -54,15 +54,19 @@ var windowLoad = (function() {
   function _calc_weightMidpoint(edge) {
     // calc the weight and midpoint of the edge between vertices x and y
     var xposx = edge.verta.posx, xposy = edge.verta.posy, yposx = edge.vertb.posx, yposy = edge.vertb.posy;
-    var midx = 0, midy = 0, posx = 0, posy = 0;
+    var offsetx = 0, offsety = 0, posx = 0, posy = 0;
     if(xposx < yposx) {
+      offsetx = xposx;
       posx = (yposx-xposx);
     } else {
+      offsetx = yposx;
       posx = (xposx-yposx);
     }
     if(xposy < yposy) {
+      offsety = xposy;
       posy = (yposy-xposy);
     } else {
+      offsety = yposy;
       posy = (xposy-yposy);
     }
     if(posx < posy) {
@@ -70,8 +74,8 @@ var windowLoad = (function() {
     } else {
       edge.weight = (posx-posy);
     }
-    edge.midpoint.x = (posx/2);
-    edge.midpoint.y = (posy/2);
+    edge.midpoint.x = (offsetx+(posx/2));
+    edge.midpoint.y = (offsety+(posy/2));
   };
 
   function _factorial(n) {
@@ -99,20 +103,26 @@ var windowLoad = (function() {
       _doc.context.stroke();
     }
     _doc.context.strokeStyle = 'rgb(240,240,240);';
+    _doc.context.lineWidth = 4;
+    _doc.context.lineCap = 'round';
     for(var i=0; i<_graph.vertices.length; i++) {
       var posx = _graph.vertices[i].posx, posy = _graph.vertices[i].posy;
       _doc.context.beginPath();
       _doc.context.arc(posx,posy,2,0,(2*Math.PI),false);
-      _doc.context.lineWidth = 4;
-      _doc.context.lineCap = 'round';
       _doc.context.stroke();
     }
-    _doc.context.font = '10pt Verdana';
+    _doc.context.font = 'bold 10pt Verdana';
+    _doc.context.fillStyle = 'rgb(255,255,255)';
+    _doc.context.lineWidth = 1;
     for(var i=0; i<_graph.edges.length; i++) {
       var posx = _graph.edges[i].midpoint.x,
         posy = _graph.edges[i].midpoint.y,
         str = _graph.edges[i].weight;
-      _doc.context.fillText(str,posx,posy);
+      _doc.context.beginPath();
+      _doc.context.moveTo(posx,posy);
+      _doc.context.lineTo(posx+10,posy-10);
+      _doc.context.stroke();
+      _doc.context.fillText(str,posx+10,posy-10);
     }
   };
   
