@@ -109,8 +109,8 @@ var windowLoad = (function() {
     }
     _doc.context.font = '10pt Verdana';
     for(var i=0; i<_graph.edges.length; i++) {
-      var posx = _graph.edges[i].verta.posx,
-        posy = _graph.edges[i].posy,
+      var posx = _graph.edges[i].midpoint.x,
+        posy = _graph.edges[i].midpoint.y,
         str = _graph.edges[i].weight;
       _doc.context.fillText(str,posx,posy);
     }
