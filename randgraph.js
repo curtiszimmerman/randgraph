@@ -11,7 +11,8 @@ var windowLoad = (function() {
     doc: null,
     font: null,
     form: null,
-    submit: null,
+    generate: null,
+    reset: null,
     title: null
   };
   
@@ -113,7 +114,8 @@ var windowLoad = (function() {
     _this.canvas = _this.doc.getElementById('canvas');
     _this.context = canvas.getContext('2d');
     _this.form = _this.doc.getElementById('form');
-    _this.submit = _this.doc.getElementById('submit');
+    _this.generate = _this.doc.getElementById('submit_generate');
+    _this.reset = _this.doc.getElementById('submit_reset');
     _this.title = _this.doc.getElementById('title');
     var input_ary = _this.doc.getElementById('input_ary'),
       input_graph = _this.doc.getElementById('input_graph'),
@@ -121,7 +123,8 @@ var windowLoad = (function() {
       input_vertices = _this.doc.getElementById('input_vertices');
     input_graph.checked = true;
     input_ary.disabled = true;
-    event(_this.submit, 'click', _submit);
+    event(_this.generate,'click',_submit);
+    event(_this.reset,'click',_submit_reset);
     event(input_graph,'click',function() {
       input_tree.checked = false;
       input_ary.disabled = true;
@@ -132,6 +135,7 @@ var windowLoad = (function() {
     });
     //fix default this to 3 or something, then steer user to option form
     //debug2 -- default to a graph for great justice
+    /*
     _graph.graph.n = prompt("number of vertices?");
     _graph.type = 'graph';
     if(_graph.type === 'graph') {
@@ -139,6 +143,7 @@ var windowLoad = (function() {
     } else if(_graph.type === 'tree') {
       _randtree();
     }
+    */
   };
   
   function _process() {
@@ -302,6 +307,15 @@ var windowLoad = (function() {
       _graph.graph.n = vertices.value;
       _randtree();
     }
+  };
+  
+  function _submit_reset() {
+    _this.context.clearRect(0,0,_this.canvas.width,_this.canvas.height);
+    _graph.graph.vertices = [];
+    _graph.graph.edges = [];
+    _graph.tree.edges = [];
+    _graph.tree.nodes = [];
+    _submit();
   };
 
   return {

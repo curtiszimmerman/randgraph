@@ -19,7 +19,7 @@ html {
   box-shadow:5px 5px 5px rgb(0,0,0);
   height:400px;
   width:800px;}
-.fieldname { width:60%;}
+.fieldname { width:80%;}
 .fieldvalue { width:20%;}
 .form {
   background-color:rgb(205,205,205);
@@ -44,6 +44,10 @@ html {
   width:80%;}
 .submenu { height:25px;}
 .submenu_radios {
+  margin-left:auto;
+  margin-right:auto;
+  width:40%;}
+.submenu_buttons {
   margin-left:auto;
   margin-right:auto;
   width:40%;}
