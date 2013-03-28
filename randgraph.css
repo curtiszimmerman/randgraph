@@ -19,6 +19,8 @@ html {
   box-shadow:5px 5px 5px rgb(0,0,0);
   height:400px;
   width:800px;}
+.fieldname { background-color:F00; width:60%; }
+.fieldvalue { width:10%; }
 .form {
   background-color:rgb(205,205,205);
   border-radius:10px 10px 0px 0px;
@@ -34,11 +36,17 @@ html {
   margin-right:auto;
   text-align:center;
   width:900px;}
+.input_radios { }
+.input_text { width:100%;}
 .menu {
   margin-left:auto;
   margin-right:auto;
   width:80%;}
-.submenu { width:25%;}
+.submenu { height:25px;}
+.submenu_radios {
+  margin-left:auto;
+  margin-right:auto;
+  width:40%;}
 .title {
   font-family:Verdana,sans;
   line-height:25px;
