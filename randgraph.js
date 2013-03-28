@@ -5,9 +5,10 @@
 
 var windowLoad = (function() {
 
-  var _doc = {
+  var _this = {
     canvas: null,
     context: null,
+    doc: null,
     font: null,
     form: null,
     submit: null,
@@ -108,18 +109,19 @@ var windowLoad = (function() {
   function init() {
     console.log("windowLoad.init()");
     _process();
-    _doc.canvas = document.getElementById('canvas');
-    _doc.context = canvas.getContext('2d');
-    _doc.form = document.getElementById('form');
-    _doc.submit = document.getElementById('submit');
-    _doc.title = document.getElementById('title');
-    var input_ary = document.getElementById('input_ary'),
-      input_graph = document.getElementById('input_graph'),
-      input_tree = document.getElementById('input_tree'),
-      input_vertices = document.getElementById('input_vertices');
+    _this.doc = document;
+    _this.canvas = _this.doc.getElementById('canvas');
+    _this.context = canvas.getContext('2d');
+    _this.form = _this.doc.getElementById('form');
+    _this.submit = _this.doc.getElementById('submit');
+    _this.title = _this.doc.getElementById('title');
+    var input_ary = _this.doc.getElementById('input_ary'),
+      input_graph = _this.doc.getElementById('input_graph'),
+      input_tree = _this.doc.getElementById('input_tree'),
+      input_vertices = _this.doc.getElementById('input_vertices');
     input_graph.checked = true;
     input_ary.disabled = true;
-    event(_doc.submit, 'click', _submit);
+    event(_this.submit, 'click', _submit);
     event(input_graph,'click',function() {
       input_tree.checked = false;
       input_ary.disabled = true;
@@ -169,43 +171,43 @@ var windowLoad = (function() {
   
   function _randgraph_draw() {
     for(var i=0; i<_graph.graph.edges.length; i++) {
-      _doc.context.beginPath();
-      _doc.context.moveTo(_graph.graph.edges[i].verta.posx,_graph.graph.edges[i].verta.posy);
-      _doc.context.lineTo(_graph.graph.edges[i].vertb.posx,_graph.graph.edges[i].vertb.posy);
-      _doc.context.lineWidth = 2;
-      _doc.context.strokeStyle = 'rgb(' +
+      _this.context.beginPath();
+      _this.context.moveTo(_graph.graph.edges[i].verta.posx,_graph.graph.edges[i].verta.posy);
+      _this.context.lineTo(_graph.graph.edges[i].vertb.posx,_graph.graph.edges[i].vertb.posy);
+      _this.context.lineWidth = 2;
+      _this.context.strokeStyle = 'rgb(' +
         _graph.graph.edges[i].color.r + ',' +
         _graph.graph.edges[i].color.g + ',' +
         _graph.graph.edges[i].color.b + ');';
-      _doc.context.stroke();
+      _this.context.stroke();
     }
-    _doc.context.strokeStyle = 'rgb(240,240,240);';
-    _doc.context.lineWidth = 4;
-    _doc.context.lineCap = 'round';
+    _this.context.strokeStyle = 'rgb(240,240,240);';
+    _this.context.lineWidth = 4;
+    _this.context.lineCap = 'round';
     for(var i=0; i<_graph.graph.vertices.length; i++) {
       var posx = _graph.graph.vertices[i].posx, posy = _graph.graph.vertices[i].posy;
-      _doc.context.beginPath();
-      _doc.context.arc(posx,posy,2,0,(2*Math.PI),false);
-      _doc.context.stroke();
+      _this.context.beginPath();
+      _this.context.arc(posx,posy,2,0,(2*Math.PI),false);
+      _this.context.stroke();
     }
-    _doc.context.font = 'bold 10pt Verdana';
-    _doc.context.fillStyle = 'rgb(255,255,255)';
-    _doc.context.lineWidth = 1;
+    _this.context.font = 'bold 10pt Verdana';
+    _this.context.fillStyle = 'rgb(255,255,255)';
+    _this.context.lineWidth = 1;
     for(var i=0; i<_graph.graph.edges.length; i++) {
       var posx = _graph.graph.edges[i].midpoint.x,
         posy = _graph.graph.edges[i].midpoint.y,
         slope = _graph.graph.edges[i].slope,
         str = _graph.graph.edges[i].weight;
-      _doc.context.beginPath();
-      _doc.context.moveTo(posx,posy);
+      _this.context.beginPath();
+      _this.context.moveTo(posx,posy);
       if(slope < 0) {
-        _doc.context.fillText(str,posx+10,posy+10);
-        _doc.context.lineTo(posx+10,posy+10);
+        _this.context.fillText(str,posx+10,posy+10);
+        _this.context.lineTo(posx+10,posy+10);
       } else {
-        _doc.context.fillText(str,posx+10,posy-10);
-        _doc.context.lineTo(posx+10,posy-10);
+        _this.context.fillText(str,posx+10,posy-10);
+        _this.context.lineTo(posx+10,posy-10);
       }
-      _doc.context.stroke();
+      _this.context.stroke();
     }
   };
   
@@ -214,8 +216,8 @@ var windowLoad = (function() {
     for(var i=0; i<_graph.graph.n; i++) {
       var vertex = new _Vertex();
       vertex.id = i;
-      vertex.posx = _rand(0,_doc.canvas.width);
-      vertex.posy = _rand(0,_doc.canvas.height);
+      vertex.posx = _rand(0,_this.canvas.width);
+      vertex.posy = _rand(0,_this.canvas.height);
       //debug1
       console.log('vert:id['+vertex.id+']px['+vertex.posx+']py['+vertex.posy+']');
       _graph.graph.vertices.push(vertex);
@@ -254,7 +256,7 @@ var windowLoad = (function() {
   };
   
   function _randgraph_init() {
-    _doc.title.innerHTML = '<h2>Complete Graph Generator (n = '+ _graph.graph.n +' vertices, random edge weight)</h2>';
+    _this.title.innerHTML = '<h2>Complete Graph Generator (n = '+ _graph.graph.n +' vertices, random edge weight)</h2>';
   };
   
   function _randtree() {
@@ -273,8 +275,8 @@ var windowLoad = (function() {
     for(var i=0; i<_graph.tree.n; i++) {
       var vertex = new _Vertex();
       vertex.id = i;
-      vertex.posx = _rand(0,_doc.canvas.width);
-      vertex.posy = _rand(0,_doc.canvas.height);
+      vertex.posx = _rand(0,_this.canvas.width);
+      vertex.posy = _rand(0,_this.canvas.height);
       //debug1
       console.log('node:id['+vertex.id+']px['+vertex.posx+']py['+vertex.posy+']');
       _graph.tree.vertices.push(vertex);
@@ -282,14 +284,14 @@ var windowLoad = (function() {
   };
     
   function _randtree_init() {
-    _doc.title.innerHTML = '<h2>N-ary Tree Generator (n = '+ _graph.tree.n +' nodes, a = '+_graph.tree.a+')</h2>';
+    _this.title.innerHTML = '<h2>N-ary Tree Generator (n = '+ _graph.tree.n +' nodes, a = '+_graph.tree.a+')</h2>';
   };
   
   function _submit() {
-    var ary = _doc.form.getElementById('input_ary'),
-      graph = _doc.form.getElementById('input_graph'),
-      tree = _doc.form.getElementById('input_tree'),
-      vertices = _doc.form.getElementById('input_vertices');
+    var ary = _this.doc.getElementById('input_ary'),
+      graph = _this.doc.getElementById('input_graph'),
+      tree = _this.doc.getElementById('input_tree'),
+      vertices = _this.doc.getElementById('input_vertices');
     if(graph.checked == true) {
       _graph.type = 'graph';
       _graph.graph.n = vertices.value;
