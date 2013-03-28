@@ -233,14 +233,17 @@ var windowLoad = (function() {
   };
   
   function _randtree_gen() {
-    for(var i=0; i<_graph.graph.n; i++) {
+    _graph.tree.height = Math.floor(_graph.tree.n / _graph.tree.a);
+    //debug1
+    console.log('height:['+_graph.tree.height+'] ['_graph.tree.a+']-ary tree with ['+_graph.tree.n+'] nodes');
+    for(var i=0; i<_graph.tree.n; i++) {
       var vertex = new _Vertex();
       vertex.id = i;
       vertex.posx = _rand(0,_doc.canvas.width);
       vertex.posy = _rand(0,_doc.canvas.height);
       //debug1
-      console.log('vert:id['+vertex.id+']px['+vertex.posx+']py['+vertex.posy+']');
-      _graph.graph.vertices.push(vertex);
+      console.log('node:id['+vertex.id+']px['+vertex.posx+']py['+vertex.posy+']');
+      _graph.tree.vertices.push(vertex);
     }
   };
     
