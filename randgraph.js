@@ -9,8 +9,7 @@ var windowLoad = (function() {
     canvas: null,
     context: null,
     font: null,
-    title: null,
-    type: ''
+    title: null
   };
   
   /* begin graph-specific objects */
@@ -32,9 +31,19 @@ var windowLoad = (function() {
   };
   
   var _graph = {
-    edges: [],
-    n: 0,
-    vertices: []
+    graph: {
+      edges: [],
+      n: 0,
+      vertices: []
+    },
+    tree: {
+      edges: [],
+      a: 0,
+      height: 0,
+      n: 0,
+      nodes: []
+    },
+    type: ''
   };
   
   function _Vertex() {
@@ -91,11 +100,11 @@ var windowLoad = (function() {
   function init() {
     console.log("windowLoad.init()");
     _process();
-    if(_doc.type == 'graph') {
+    if(_doc.type === 'graph') {
       _randgraph_init();
       _randgraph_gen();
       _randgraph_draw();
-    } else if(_doc.type == 'tree') {
+    } else if(_doc.type === 'tree') {
       _randtree_init();
       _randtree_gen();
       _randtree_draw();
@@ -108,7 +117,8 @@ var windowLoad = (function() {
     _doc.context = canvas.getContext('2d');
     _doc.form = document.getElementById('form');
     //fix default this to 3 or something, then steer user to option form
-    _graph.n = prompt("number of vertices?");
+    _graph.graph.n = prompt("number of vertices?");
+    _graph.type = 'graph';
   };
   
   // default return type is int
@@ -131,22 +141,22 @@ var windowLoad = (function() {
   };
   
   function _randgraph_draw() {
-    for(var i=0; i<_graph.edges.length; i++) {
+    for(var i=0; i<_graph.graph.edges.length; i++) {
       _doc.context.beginPath();
-      _doc.context.moveTo(_graph.edges[i].verta.posx,_graph.edges[i].verta.posy);
-      _doc.context.lineTo(_graph.edges[i].vertb.posx,_graph.edges[i].vertb.posy);
+      _doc.context.moveTo(_graph.graph.edges[i].verta.posx,_graph.graph.edges[i].verta.posy);
+      _doc.context.lineTo(_graph.graph.edges[i].vertb.posx,_graph.graph.edges[i].vertb.posy);
       _doc.context.lineWidth = 2;
       _doc.context.strokeStyle = 'rgb(' +
-        _graph.edges[i].color.r + ',' +
-        _graph.edges[i].color.g + ',' +
-        _graph.edges[i].color.b + ');';
+        _graph.graph.edges[i].color.r + ',' +
+        _graph.graph.edges[i].color.g + ',' +
+        _graph.graph.edges[i].color.b + ');';
       _doc.context.stroke();
     }
     _doc.context.strokeStyle = 'rgb(240,240,240);';
     _doc.context.lineWidth = 4;
     _doc.context.lineCap = 'round';
-    for(var i=0; i<_graph.vertices.length; i++) {
-      var posx = _graph.vertices[i].posx, posy = _graph.vertices[i].posy;
+    for(var i=0; i<_graph.graph.vertices.length; i++) {
+      var posx = _graph.graph.vertices[i].posx, posy = _graph.graph.vertices[i].posy;
       _doc.context.beginPath();
       _doc.context.arc(posx,posy,2,0,(2*Math.PI),false);
       _doc.context.stroke();
@@ -154,11 +164,11 @@ var windowLoad = (function() {
     _doc.context.font = 'bold 10pt Verdana';
     _doc.context.fillStyle = 'rgb(255,255,255)';
     _doc.context.lineWidth = 1;
-    for(var i=0; i<_graph.edges.length; i++) {
-      var posx = _graph.edges[i].midpoint.x,
-        posy = _graph.edges[i].midpoint.y,
-        slope = _graph.edges[i].slope,
-        str = _graph.edges[i].weight;
+    for(var i=0; i<_graph.graph.edges.length; i++) {
+      var posx = _graph.graph.edges[i].midpoint.x,
+        posy = _graph.graph.edges[i].midpoint.y,
+        slope = _graph.graph.edges[i].slope,
+        str = _graph.graph.edges[i].weight;
       _doc.context.beginPath();
       _doc.context.moveTo(posx,posy);
       if(slope < 0) {
@@ -181,26 +191,26 @@ var windowLoad = (function() {
       vertex.posy = _rand(0,_doc.canvas.height);
       //debug1
       console.log('vert:id['+vertex.id+']px['+vertex.posx+']py['+vertex.posy+']');
-      _graph.vertices.push(vertex);
+      _graph.graph.vertices.push(vertex);
     }
     // edge calculation based on extant vertices in array
     // (for each pair of vertices, traverse edges to detect duplication)
     var place = true;
-    for(var i=0; i<_graph.vertices.length; i++) {
-      for(var j=0; j<_graph.vertices.length; j++) {
-        for(var k=0; k<_graph.edges.length; k++) {
+    for(var i=0; i<_graph.graph.vertices.length; i++) {
+      for(var j=0; j<_graph.graph.vertices.length; j++) {
+        for(var k=0; k<_graph.graph.edges.length; k++) {
           // conditions invalidating placement of new edge
-          if( ((_graph.edges[k].verta == _graph.vertices[i]) && (_graph.edges[k].vertb == _graph.vertices[j])) || 
-            ((_graph.edges[k].verta == _graph.vertices[j]) && (_graph.edges[k].vertb == _graph.vertices[i])) ) {
+          if( ((_graph.graph.edges[k].verta == _graph.graph.vertices[i]) && (_graph.graph.edges[k].vertb == _graph.graph.vertices[j])) || 
+            ((_graph.graph.edges[k].verta == _graph.graph.vertices[j]) && (_graph.graph.edges[k].vertb == _graph.graph.vertices[i])) ) {
             place = false;
           }
         }
         // currently no support for reflexive edges
-        if(_graph.vertices[i] == _graph.vertices[j]) { place = false; }
+        if(_graph.graph.vertices[i] == _graph.graph.vertices[j]) { place = false; }
         // otherwise, create a new edge and plunk 'er down!
         if(place) {
           var edge = new _Edge();
-          edge.id = _graph.edges.length;
+          edge.id = _graph.graph.edges.length;
           edge.verta = _graph.vertices[i];
           edge.vertb = _graph.vertices[j];
           _calc_weightMidpoint(edge);
@@ -217,7 +227,7 @@ var windowLoad = (function() {
   };
   
   function _randgraph_init() {
-    _doc.title.innerHTML = '<h2>Complete Graph Generator (n = '+ _graph.n +', random edge weight)</h2>';
+    _doc.title.innerHTML = '<h2>Complete Graph Generator (n = '+ _graph.graph.n +' vertices, random edge weight)</h2>';
   };
 
   function _randtree_draw() {
@@ -227,10 +237,11 @@ var windowLoad = (function() {
   };
     
   function _randtree_init() {
+    _doc.title.innerHTML = '<h2>N-ary Tree Generator (n = '+ _graph.tree.n +' nodes, a = '+_graph.tree.a+')</h2>';
   };
   
   function _submit() {
-    if(_doc.form.
+    if(_doc.form) { }
   };
 
   return { init: init }
