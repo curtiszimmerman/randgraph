@@ -9,6 +9,7 @@ var windowLoad = (function() {
     canvas: null,
     context: null,
     font: null,
+    form: null,
     title: null
   };
   
@@ -43,7 +44,7 @@ var windowLoad = (function() {
       n: 0,
       nodes: []
     },
-    type: ''
+    type: null
   };
   
   function _Vertex() {
@@ -55,9 +56,7 @@ var windowLoad = (function() {
 
   function _calc_edge(x) {
     var edges = 0;
-    var last = 0;
     for(var i=0; i<=x; i++) {
-      last = i;
       edges = (edges+i)-1;
     }
     return ++edges;
@@ -93,18 +92,18 @@ var windowLoad = (function() {
   };
 
   function _factorial(n) {
-    if(n<=1) return 1;
+    if(n <= 1) { return 1; }
     return n*_factorial(n-1);
   };
 
   function init() {
     console.log("windowLoad.init()");
     _process();
-    if(_doc.type === 'graph') {
+    if(_graph.type === 'graph') {
       _randgraph_init();
       _randgraph_gen();
       _randgraph_draw();
-    } else if(_doc.type === 'tree') {
+    } else if(_graph.type === 'tree') {
       _randtree_init();
       _randtree_gen();
       _randtree_draw();
@@ -122,11 +121,11 @@ var windowLoad = (function() {
   };
   
   // default return type is int
-  function _rand(type, min, max) {
+  function _rand(min, max, type) {
     type = (typeof(type) === 'undefined') ? 'int' : type;
-    if(type == 'int') {
+    if(type === 'int') {
       return _rand_getRandomInt(min, max);
-    } else if(type == 'float') {
+    } else if(type === 'float') {
       return _rand_getRandomFloat(min, max);
     }
   };
@@ -184,12 +183,13 @@ var windowLoad = (function() {
   
   function _randgraph_gen() {
     // vertices
-    for(var i=0; i<_graph.n; i++) {
+    for(var i=0; i<_graph.graph.n; i++) {
       var vertex = new _Vertex();
       vertex.id = i;
       vertex.posx = _rand(0,_doc.canvas.width);
       vertex.posy = _rand(0,_doc.canvas.height);
-      //debug1
+      //debug2
+      alert('_doc.canvas.h['+_doc.canvas.height+'].w['+_doc.canvas.width+']');
       console.log('vert:id['+vertex.id+']px['+vertex.posx+']py['+vertex.posy+']');
       _graph.graph.vertices.push(vertex);
     }
@@ -211,13 +211,13 @@ var windowLoad = (function() {
         if(place) {
           var edge = new _Edge();
           edge.id = _graph.graph.edges.length;
-          edge.verta = _graph.vertices[i];
-          edge.vertb = _graph.vertices[j];
+          edge.verta = _graph.graph.vertices[i];
+          edge.vertb = _graph.graph.vertices[j];
           _calc_weightMidpoint(edge);
           edge.color.r = _rand(0,255);
           edge.color.g = _rand(0,255);
           edge.color.b = _rand(0,255);
-          _graph.edges.push(edge);
+          _graph.graph.edges.push(edge);
           continue;
         } else {
           place = true;
