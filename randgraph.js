@@ -235,7 +235,7 @@ var windowLoad = (function() {
   function _randtree_gen() {
     _graph.tree.height = Math.floor(_graph.tree.n / _graph.tree.a);
     //debug1
-    console.log('height:['+_graph.tree.height+'] ['_graph.tree.a+']-ary tree with ['+_graph.tree.n+'] nodes');
+    console.log('height:['+_graph.tree.height+'] ['+_graph.tree.a+']-ary tree with ['+_graph.tree.n+'] nodes');
     for(var i=0; i<_graph.tree.n; i++) {
       var vertex = new _Vertex();
       vertex.id = i;
