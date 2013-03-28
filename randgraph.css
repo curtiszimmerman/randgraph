@@ -19,8 +19,8 @@ html {
   box-shadow:5px 5px 5px rgb(0,0,0);
   height:400px;
   width:800px;}
-.fieldname { background-color:F00; width:60%; }
-.fieldvalue { width:10%; }
+.fieldname { width:60%;}
+.fieldvalue { width:20%;}
 .form {
   background-color:rgb(205,205,205);
   border-radius:10px 10px 0px 0px;
