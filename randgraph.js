@@ -8,7 +8,9 @@ var windowLoad = (function() {
   var _doc = {
     canvas: null,
     context: null,
-    title: null
+    font: null,
+    title: null,
+    type: ''
   };
   
   /* begin graph-specific objects */
@@ -88,9 +90,44 @@ var windowLoad = (function() {
 
   function init() {
     console.log("windowLoad.init()");
-    _randgraph_init();
-    _randgraph_gen();
-    _randgraph_draw();
+    _process();
+    if(_doc.type == 'graph') {
+      _randgraph_init();
+      _randgraph_gen();
+      _randgraph_draw();
+    } else if(_doc.type == 'tree') {
+      _randtree_init();
+      _randtree_gen();
+      _randtree_draw();
+    }
+  };
+  
+  function _process() {
+    _doc.title = document.getElementById('title');
+    _doc.canvas = document.getElementById('canvas');
+    _doc.context = canvas.getContext('2d');
+    _doc.form = document.getElementById('form');
+    //fix default this to 3 or something, then steer user to option form
+    _graph.n = prompt("number of vertices?");
+  };
+  
+  // default return type is int
+  function _rand(type, min, max) {
+    type = (typeof(type) === 'undefined') ? 'int' : type;
+    if(type == 'int') {
+      return _rand_getRandomInt(min, max);
+    } else if(type == 'float') {
+      return _rand_getRandomFloat(min, max);
+    }
+  };
+  
+  //fix -- return a better float than one between 0.0 and 0.0 ;)
+  function _rand_getRandomFloat(min, max) {
+    return 0.0;
+  };
+  
+  function _rand_getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   };
   
   function _randgraph_draw() {
@@ -180,19 +217,20 @@ var windowLoad = (function() {
   };
   
   function _randgraph_init() {
-    _graph.n = prompt("number of vertices?");
-    _doc.title = document.getElementById('title');
-    _doc.canvas = document.getElementById('canvas');
-    _doc.context = canvas.getContext('2d');
     _doc.title.innerHTML = '<h2>Complete Graph Generator (n = '+ _graph.n +', random edge weight)</h2>';
   };
-  
-  function _rand(min, max) {
-    return _rand_getRandomInt(min, max);
+
+  function _randtree_draw() {
   };
   
-  function _rand_getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+  function _randtree_gen() {
+  };
+    
+  function _randtree_init() {
+  };
+  
+  function _submit() {
+    if(_doc.form.
   };
 
   return { init: init }
