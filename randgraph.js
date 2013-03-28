@@ -97,6 +97,11 @@ var windowLoad = (function() {
   };
 
   function init() {
+    if(window.addEventListener) {
+      _doc.form.getElementById('submit').addEventListener('click',_submit,false);
+    } else {
+      _doc.form.getElementById('submit').attachEvent('click',_submit);
+    }
     console.log("windowLoad.init()");
     _process();
     if(_graph.type === 'graph') {
@@ -252,6 +257,9 @@ var windowLoad = (function() {
   };
   
   function _submit() {
+    var vertices = _doc.form.getElementById(),
+      vertices = _doc.form.getElementById(),
+      vertices = _doc.form.getElementById();
     if(_doc.form) { }
   };
 
