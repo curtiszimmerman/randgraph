@@ -9,6 +9,8 @@ var windowLoad = (function() {
     canvas: null,
     context: null,
     font: null,
+    form: null,
+    submit: null,
     title: null
   };
   
@@ -37,13 +39,13 @@ var windowLoad = (function() {
       vertices: []
     },
     tree: {
-      edges: [],
       a: 0,
+      edges: [],
       height: 0,
       n: 0,
       nodes: []
     },
-    type: ''
+    type: null
   };
   
   function _Vertex() {
@@ -55,9 +57,7 @@ var windowLoad = (function() {
 
   function _calc_edge(x) {
     var edges = 0;
-    var last = 0;
     for(var i=0; i<=x; i++) {
-      last = i;
       edges = (edges+i)-1;
     }
     return ++edges;
@@ -91,42 +91,63 @@ var windowLoad = (function() {
     edge.midpoint.x = (offsetx+(posx/2));
     edge.midpoint.y = (offsety+(posy/2));
   };
+  
+  function event(element, event, payload) {
+    if(window.addEventListener) {
+      element.addEventListener(event, payload, false);
+    } else {
+      element.attachEvent(event, payload);
+    }
+  };
 
   function _factorial(n) {
-    if(n<=1) return 1;
+    if(n <= 1) { return 1; }
     return n*_factorial(n-1);
   };
 
   function init() {
     console.log("windowLoad.init()");
     _process();
-    if(_doc.type === 'graph') {
-      _randgraph_init();
-      _randgraph_gen();
-      _randgraph_draw();
-    } else if(_doc.type === 'tree') {
-      _randtree_init();
-      _randtree_gen();
-      _randtree_draw();
+    _doc.canvas = document.getElementById('canvas');
+    _doc.context = canvas.getContext('2d');
+    _doc.form = document.getElementById('form');
+    _doc.submit = document.getElementById('submit');
+    _doc.title = document.getElementById('title');
+    var input_ary = document.getElementById('input_ary'),
+      input_graph = document.getElementById('input_graph'),
+      input_tree = document.getElementById('input_tree'),
+      input_vertices = document.getElementById('input_vertices');
+    input_graph.checked = true;
+    input_ary.disabled = true;
+    event(_doc.submit, 'click', _submit);
+    event(input_graph,'click',function() {
+      input_tree.checked = false;
+      input_ary.disabled = true;
+    });
+    event(input_tree,'click',function() {
+      input_graph.checked = false;
+      input_ary.disabled = false;
+    });
+    //fix default this to 3 or something, then steer user to option form
+    //debug2 -- default to a graph for great justice
+    _graph.graph.n = prompt("number of vertices?");
+    _graph.type = 'graph';
+    if(_graph.type === 'graph') {
+      _randgraph();
+    } else if(_graph.type === 'tree') {
+      _randtree();
     }
   };
   
   function _process() {
-    _doc.title = document.getElementById('title');
-    _doc.canvas = document.getElementById('canvas');
-    _doc.context = canvas.getContext('2d');
-    _doc.form = document.getElementById('form');
-    //fix default this to 3 or something, then steer user to option form
-    _graph.graph.n = prompt("number of vertices?");
-    _graph.type = 'graph';
   };
   
   // default return type is int
-  function _rand(type, min, max) {
+  function _rand(min, max, type) {
     type = (typeof(type) === 'undefined') ? 'int' : type;
-    if(type == 'int') {
+    if(type === 'int') {
       return _rand_getRandomInt(min, max);
-    } else if(type == 'float') {
+    } else if(type === 'float') {
       return _rand_getRandomFloat(min, max);
     }
   };
@@ -138,6 +159,12 @@ var windowLoad = (function() {
   
   function _rand_getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+  
+  function _randgraph() {
+    _randgraph_init();
+    _randgraph_gen();
+    _randgraph_draw();
   };
   
   function _randgraph_draw() {
@@ -184,7 +211,7 @@ var windowLoad = (function() {
   
   function _randgraph_gen() {
     // vertices
-    for(var i=0; i<_graph.n; i++) {
+    for(var i=0; i<_graph.graph.n; i++) {
       var vertex = new _Vertex();
       vertex.id = i;
       vertex.posx = _rand(0,_doc.canvas.width);
@@ -211,13 +238,13 @@ var windowLoad = (function() {
         if(place) {
           var edge = new _Edge();
           edge.id = _graph.graph.edges.length;
-          edge.verta = _graph.vertices[i];
-          edge.vertb = _graph.vertices[j];
+          edge.verta = _graph.graph.vertices[i];
+          edge.vertb = _graph.graph.vertices[j];
           _calc_weightMidpoint(edge);
           edge.color.r = _rand(0,255);
           edge.color.g = _rand(0,255);
           edge.color.b = _rand(0,255);
-          _graph.edges.push(edge);
+          _graph.graph.edges.push(edge);
           continue;
         } else {
           place = true;
@@ -229,11 +256,29 @@ var windowLoad = (function() {
   function _randgraph_init() {
     _doc.title.innerHTML = '<h2>Complete Graph Generator (n = '+ _graph.graph.n +' vertices, random edge weight)</h2>';
   };
+  
+  function _randtree() {
+    _randtree_init();
+    _randtree_gen();
+    _randtree_draw();
+  };
 
   function _randtree_draw() {
   };
   
   function _randtree_gen() {
+    _graph.tree.height = Math.floor(_graph.tree.n / _graph.tree.a);
+    //debug1
+    console.log('height:['+_graph.tree.height+'] ['+_graph.tree.a+']-ary tree with ['+_graph.tree.n+'] nodes');
+    for(var i=0; i<_graph.tree.n; i++) {
+      var vertex = new _Vertex();
+      vertex.id = i;
+      vertex.posx = _rand(0,_doc.canvas.width);
+      vertex.posy = _rand(0,_doc.canvas.height);
+      //debug1
+      console.log('node:id['+vertex.id+']px['+vertex.posx+']py['+vertex.posy+']');
+      _graph.tree.vertices.push(vertex);
+    }
   };
     
   function _randtree_init() {
@@ -241,14 +286,27 @@ var windowLoad = (function() {
   };
   
   function _submit() {
-    if(_doc.form) { }
+    var ary = _doc.form.getElementById('input_ary'),
+      graph = _doc.form.getElementById('input_graph'),
+      tree = _doc.form.getElementById('input_tree'),
+      vertices = _doc.form.getElementById('input_vertices');
+    if(graph.checked == true) {
+      _graph.type = 'graph';
+      _graph.graph.n = vertices;
+      _randgraph();
+    } else if(tree.checked == true) {
+      _graph.type = 'tree';
+      _graph.graph.a = ary;
+      _graph.graph.n = vertices;
+      _randtree();
+    }
   };
 
-  return { init: init }
+  return {
+    event: event,
+    init: init
+  }
 }());
 
-if(window.addEventListener) {
-  window.addEventListener('load',windowLoad.init,false);
-} else {
-  window.attachEvent('load',windowLoad.init);
-}
+// fire it up!
+windowLoad.event(window,'load',windowLoad.init);
