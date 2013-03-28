@@ -10,6 +10,7 @@ var windowLoad = (function() {
     context: null,
     font: null,
     form: null,
+    submit: null,
     title: null
   };
   
@@ -97,13 +98,16 @@ var windowLoad = (function() {
   };
 
   function init() {
+    _process();
     if(window.addEventListener) {
-      _doc.form.getElementById('submit').addEventListener('click',_submit,false);
+      _doc.submit.addEventListener('click',_submit,false);
     } else {
-      _doc.form.getElementById('submit').attachEvent('click',_submit);
+      _doc.submit.attachEvent('click',_submit);
     }
     console.log("windowLoad.init()");
-    _process();
+    //debug2 -- default to a graph for great justice
+    _graph.graph.n = prompt("number of vertices?");
+    _graph.type = 'graph';
     if(_graph.type === 'graph') {
       _randgraph_init();
       _randgraph_gen();
@@ -120,9 +124,8 @@ var windowLoad = (function() {
     _doc.canvas = document.getElementById('canvas');
     _doc.context = canvas.getContext('2d');
     _doc.form = document.getElementById('form');
+    _doc.submit = document.getElementById('submit');
     //fix default this to 3 or something, then steer user to option form
-    _graph.graph.n = prompt("number of vertices?");
-    _graph.type = 'graph';
   };
   
   // default return type is int
