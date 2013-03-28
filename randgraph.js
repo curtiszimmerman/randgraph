@@ -5,11 +5,17 @@
 
 var windowLoad = (function() {
 
-  var _doc = {
+  var _this = {
     canvas: null,
     context: null,
+    doc: null,
     font: null,
     form: null,
+<<<<<<< HEAD
+=======
+    generate: null,
+    reset: null,
+>>>>>>> ui_formupdates
     title: null
   };
   
@@ -38,8 +44,8 @@ var windowLoad = (function() {
       vertices: []
     },
     tree: {
-      edges: [],
       a: 0,
+      edges: [],
       height: 0,
       n: 0,
       nodes: []
@@ -90,6 +96,14 @@ var windowLoad = (function() {
     edge.midpoint.x = (offsetx+(posx/2));
     edge.midpoint.y = (offsety+(posy/2));
   };
+  
+  function event(element, event, payload) {
+    if(window.addEventListener) {
+      element.addEventListener(event, payload, false);
+    } else {
+      element.attachEvent(event, payload);
+    }
+  };
 
   function _factorial(n) {
     if(n <= 1) { return 1; }
@@ -99,6 +113,7 @@ var windowLoad = (function() {
   function init() {
     console.log("windowLoad.init()");
     _process();
+<<<<<<< HEAD
     if(_graph.type === 'graph') {
       _randgraph_init();
       _randgraph_gen();
@@ -107,17 +122,45 @@ var windowLoad = (function() {
       _randtree_init();
       _randtree_gen();
       _randtree_draw();
+=======
+    _this.doc = document;
+    _this.canvas = _this.doc.getElementById('canvas');
+    _this.context = canvas.getContext('2d');
+    _this.form = _this.doc.getElementById('form');
+    _this.generate = _this.doc.getElementById('submit_generate');
+    _this.reset = _this.doc.getElementById('submit_reset');
+    _this.title = _this.doc.getElementById('title');
+    var input_ary = _this.doc.getElementById('input_ary'),
+      input_graph = _this.doc.getElementById('input_graph'),
+      input_tree = _this.doc.getElementById('input_tree'),
+      input_vertices = _this.doc.getElementById('input_vertices');
+    input_graph.checked = true;
+    input_ary.disabled = true;
+    event(_this.generate,'click',_submit);
+    event(_this.reset,'click',_submit_reset);
+    event(input_graph,'click',function() {
+      input_tree.checked = false;
+      input_ary.disabled = true;
+    });
+    event(input_tree,'click',function() {
+      input_graph.checked = false;
+      input_ary.disabled = false;
+    });
+    //fix default this to 3 or something, then steer user to option form
+    //debug2 -- default to a graph for great justice
+    /*
+    _graph.graph.n = prompt("number of vertices?");
+    _graph.type = 'graph';
+    if(_graph.type === 'graph') {
+      _randgraph();
+    } else if(_graph.type === 'tree') {
+      _randtree();
+>>>>>>> ui_formupdates
     }
+    */
   };
   
   function _process() {
-    _doc.title = document.getElementById('title');
-    _doc.canvas = document.getElementById('canvas');
-    _doc.context = canvas.getContext('2d');
-    _doc.form = document.getElementById('form');
-    //fix default this to 3 or something, then steer user to option form
-    _graph.graph.n = prompt("number of vertices?");
-    _graph.type = 'graph';
   };
   
   // default return type is int
@@ -139,45 +182,51 @@ var windowLoad = (function() {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
   
+  function _randgraph() {
+    _randgraph_init();
+    _randgraph_gen();
+    _randgraph_draw();
+  };
+  
   function _randgraph_draw() {
     for(var i=0; i<_graph.graph.edges.length; i++) {
-      _doc.context.beginPath();
-      _doc.context.moveTo(_graph.graph.edges[i].verta.posx,_graph.graph.edges[i].verta.posy);
-      _doc.context.lineTo(_graph.graph.edges[i].vertb.posx,_graph.graph.edges[i].vertb.posy);
-      _doc.context.lineWidth = 2;
-      _doc.context.strokeStyle = 'rgb(' +
+      _this.context.beginPath();
+      _this.context.moveTo(_graph.graph.edges[i].verta.posx,_graph.graph.edges[i].verta.posy);
+      _this.context.lineTo(_graph.graph.edges[i].vertb.posx,_graph.graph.edges[i].vertb.posy);
+      _this.context.lineWidth = 2;
+      _this.context.strokeStyle = 'rgb(' +
         _graph.graph.edges[i].color.r + ',' +
         _graph.graph.edges[i].color.g + ',' +
         _graph.graph.edges[i].color.b + ');';
-      _doc.context.stroke();
+      _this.context.stroke();
     }
-    _doc.context.strokeStyle = 'rgb(240,240,240);';
-    _doc.context.lineWidth = 4;
-    _doc.context.lineCap = 'round';
+    _this.context.strokeStyle = 'rgb(240,240,240);';
+    _this.context.lineWidth = 4;
+    _this.context.lineCap = 'round';
     for(var i=0; i<_graph.graph.vertices.length; i++) {
       var posx = _graph.graph.vertices[i].posx, posy = _graph.graph.vertices[i].posy;
-      _doc.context.beginPath();
-      _doc.context.arc(posx,posy,2,0,(2*Math.PI),false);
-      _doc.context.stroke();
+      _this.context.beginPath();
+      _this.context.arc(posx,posy,2,0,(2*Math.PI),false);
+      _this.context.stroke();
     }
-    _doc.context.font = 'bold 10pt Verdana';
-    _doc.context.fillStyle = 'rgb(255,255,255)';
-    _doc.context.lineWidth = 1;
+    _this.context.font = 'bold 10pt Verdana';
+    _this.context.fillStyle = 'rgb(255,255,255)';
+    _this.context.lineWidth = 1;
     for(var i=0; i<_graph.graph.edges.length; i++) {
       var posx = _graph.graph.edges[i].midpoint.x,
         posy = _graph.graph.edges[i].midpoint.y,
         slope = _graph.graph.edges[i].slope,
         str = _graph.graph.edges[i].weight;
-      _doc.context.beginPath();
-      _doc.context.moveTo(posx,posy);
+      _this.context.beginPath();
+      _this.context.moveTo(posx,posy);
       if(slope < 0) {
-        _doc.context.fillText(str,posx+10,posy+10);
-        _doc.context.lineTo(posx+10,posy+10);
+        _this.context.fillText(str,posx+10,posy+10);
+        _this.context.lineTo(posx+10,posy+10);
       } else {
-        _doc.context.fillText(str,posx+10,posy-10);
-        _doc.context.lineTo(posx+10,posy-10);
+        _this.context.fillText(str,posx+10,posy-10);
+        _this.context.lineTo(posx+10,posy-10);
       }
-      _doc.context.stroke();
+      _this.context.stroke();
     }
   };
   
@@ -186,10 +235,16 @@ var windowLoad = (function() {
     for(var i=0; i<_graph.graph.n; i++) {
       var vertex = new _Vertex();
       vertex.id = i;
+<<<<<<< HEAD
       vertex.posx = _rand(0,_doc.canvas.width);
       vertex.posy = _rand(0,_doc.canvas.height);
       //debug2
       alert('_doc.canvas.h['+_doc.canvas.height+'].w['+_doc.canvas.width+']');
+=======
+      vertex.posx = _rand(0,_this.canvas.width);
+      vertex.posy = _rand(0,_this.canvas.height);
+      //debug1
+>>>>>>> ui_formupdates
       console.log('vert:id['+vertex.id+']px['+vertex.posx+']py['+vertex.posy+']');
       _graph.graph.vertices.push(vertex);
     }
@@ -227,28 +282,68 @@ var windowLoad = (function() {
   };
   
   function _randgraph_init() {
-    _doc.title.innerHTML = '<h2>Complete Graph Generator (n = '+ _graph.graph.n +' vertices, random edge weight)</h2>';
+    _this.title.innerHTML = '<h2>Complete Graph Generator (n = '+ _graph.graph.n +' vertices, random edge weight)</h2>';
+  };
+  
+  function _randtree() {
+    _randtree_init();
+    _randtree_gen();
+    _randtree_draw();
   };
 
   function _randtree_draw() {
   };
   
   function _randtree_gen() {
+    _graph.tree.height = Math.floor(_graph.tree.n / _graph.tree.a);
+    //debug1
+    console.log('height:['+_graph.tree.height+'] ['+_graph.tree.a+']-ary tree with ['+_graph.tree.n+'] nodes');
+    for(var i=0; i<_graph.tree.n; i++) {
+      var vertex = new _Vertex();
+      vertex.id = i;
+      vertex.posx = _rand(0,_this.canvas.width);
+      vertex.posy = _rand(0,_this.canvas.height);
+      //debug1
+      console.log('node:id['+vertex.id+']px['+vertex.posx+']py['+vertex.posy+']');
+      _graph.tree.vertices.push(vertex);
+    }
   };
     
   function _randtree_init() {
-    _doc.title.innerHTML = '<h2>N-ary Tree Generator (n = '+ _graph.tree.n +' nodes, a = '+_graph.tree.a+')</h2>';
+    _this.title.innerHTML = '<h2>N-ary Tree Generator (n = '+ _graph.tree.n +' nodes, a = '+_graph.tree.a+')</h2>';
   };
   
   function _submit() {
-    if(_doc.form) { }
+    var ary = _this.doc.getElementById('input_ary'),
+      graph = _this.doc.getElementById('input_graph'),
+      tree = _this.doc.getElementById('input_tree'),
+      vertices = _this.doc.getElementById('input_vertices');
+    if(graph.checked == true) {
+      _graph.type = 'graph';
+      _graph.graph.n = vertices.value;
+      _randgraph();
+    } else if(tree.checked == true) {
+      _graph.type = 'tree';
+      _graph.graph.a = ary.value;
+      _graph.graph.n = vertices.value;
+      _randtree();
+    }
+  };
+  
+  function _submit_reset() {
+    _this.context.clearRect(0,0,_this.canvas.width,_this.canvas.height);
+    _graph.graph.vertices = [];
+    _graph.graph.edges = [];
+    _graph.tree.edges = [];
+    _graph.tree.nodes = [];
+    _submit();
   };
 
-  return { init: init }
+  return {
+    event: event,
+    init: init
+  }
 }());
 
-if(window.addEventListener) {
-  window.addEventListener('load',windowLoad.init,false);
-} else {
-  window.attachEvent('load',windowLoad.init);
-}
+// fire it up!
+windowLoad.event(window,'load',windowLoad.init);

@@ -9,23 +9,42 @@
 <body><br><br><div class="title" id="title"></div><br><br>
 <form action="javascript:void(0);" method="POST" class="form" id="form">
 <div class="menu">
-  <div class="clear"></div>
-  <div class="floatLeft">Number of Vertices</div>
-  <div class="floatRight"><input type="text" class="option" id="vertices"></input></div>
-  <div class="clear"></div>
-<div class="floatLeft submenu">
-  <div class="clear"></div>
-  <div class="floatLeft">Graph</div>
-  <div class="floatRight"><input type="radio" class="radio" id="vertices"></input></div>
-</div>
-<div class="floatRight submenu">
-  <div class="clear"></div>
-  <div class="floatLeft">Tree</div>
-  <div class="floatRight"><input type="radio" class="radio" id="vertices"></input></div>
-</div>
-<div class="clear"></div>
-<div class="floatRight"><input type="submit" class="submit" id="submit"></input></div>
-<div class="clear"></div>
+  <div class="submenu">
+    <div class="submenu_radios">
+      <div class="floatLeft">
+        <div class="clear"></div>
+        <div class="floatLeft">Graph </div>
+        <div class="floatRight"><input type="radio" class="input_radios" id="input_graph"></input></div>
+      </div>
+      <div class="floatRight">
+        <div class="clear"></div>
+        <div class="floatLeft">Tree </div>
+        <div class="floatRight"><input type="radio" class="input_radios" id="input_tree"></input></div>
+      </div>
+    </div>
+  </div><!--.submenu-->
+  <div class="submenu">
+    <div class="clear"></div>
+    <div class="floatLeft fieldname">Number of Vertices</div>
+    <div class="floatRight fieldvalue"><input type="text" class="input_text" id="input_vertices"></input></div>
+  </div>
+  <div class="submenu">
+    <div class="clear"></div>
+    <div class="floatLeft fieldname">N-ary Tree Per-Node Max Children</div>
+    <div class="floatRight fieldvalue"><input type="text" class="input_text" id="input_ary"></input></div>
+  </div>
+    <div class="submenu">
+    <div class="submenu_buttons">
+      <div class="floatLeft">
+        <div class="clear"></div>
+        <div class="floatRight"><input type="submit" class="input_submit" id="submit_reset" value="Reset!"></input></div>
+      </div>
+      <div class="floatRight">
+        <div class="clear"></div>
+        <div class="floatLeft"><input type="submit" class="input_submit" id="submit_generate" value="Generate!"></input></div>
+      </div>
+    </div>
+  </div><!--.submenu-->
 </div><!--.menu-->
 </form>
 <div class="graph"><br><br><canvas class="canvas" id="canvas" height="400" width="800"></canvas></div>
