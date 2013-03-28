@@ -38,8 +38,8 @@ var windowLoad = (function() {
       vertices: []
     },
     tree: {
-      edges: [],
       a: 0,
+      edges: [],
       height: 0,
       n: 0,
       nodes: []
@@ -188,8 +188,7 @@ var windowLoad = (function() {
       vertex.id = i;
       vertex.posx = _rand(0,_doc.canvas.width);
       vertex.posy = _rand(0,_doc.canvas.height);
-      //debug2
-      alert('_doc.canvas.h['+_doc.canvas.height+'].w['+_doc.canvas.width+']');
+      //debug1
       console.log('vert:id['+vertex.id+']px['+vertex.posx+']py['+vertex.posy+']');
       _graph.graph.vertices.push(vertex);
     }
@@ -234,6 +233,15 @@ var windowLoad = (function() {
   };
   
   function _randtree_gen() {
+    for(var i=0; i<_graph.graph.n; i++) {
+      var vertex = new _Vertex();
+      vertex.id = i;
+      vertex.posx = _rand(0,_doc.canvas.width);
+      vertex.posy = _rand(0,_doc.canvas.height);
+      //debug1
+      console.log('vert:id['+vertex.id+']px['+vertex.posx+']py['+vertex.posy+']');
+      _graph.graph.vertices.push(vertex);
+    }
   };
     
   function _randtree_init() {
