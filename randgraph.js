@@ -12,10 +12,14 @@ var windowLoad = (function() {
     font: null,
     form: null,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     generate: null,
     reset: null,
 >>>>>>> ui_formupdates
+=======
+    submit: null,
+>>>>>>> create_tree
     title: null
   };
   
@@ -111,9 +115,20 @@ var windowLoad = (function() {
   };
 
   function init() {
-    console.log("windowLoad.init()");
     _process();
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    if(window.addEventListener) {
+      _doc.submit.addEventListener('click',_submit,false);
+    } else {
+      _doc.submit.attachEvent('click',_submit);
+    }
+    console.log("windowLoad.init()");
+    //debug2 -- default to a graph for great justice
+    _graph.graph.n = prompt("number of vertices?");
+    _graph.type = 'graph';
+>>>>>>> create_tree
     if(_graph.type === 'graph') {
       _randgraph_init();
       _randgraph_gen();
@@ -161,6 +176,15 @@ var windowLoad = (function() {
   };
   
   function _process() {
+<<<<<<< HEAD
+=======
+    _doc.title = document.getElementById('title');
+    _doc.canvas = document.getElementById('canvas');
+    _doc.context = canvas.getContext('2d');
+    _doc.form = document.getElementById('form');
+    _doc.submit = document.getElementById('submit');
+    //fix default this to 3 or something, then steer user to option form
+>>>>>>> create_tree
   };
   
   // default return type is int
@@ -238,6 +262,7 @@ var windowLoad = (function() {
 <<<<<<< HEAD
       vertex.posx = _rand(0,_doc.canvas.width);
       vertex.posy = _rand(0,_doc.canvas.height);
+<<<<<<< HEAD
       //debug2
       alert('_doc.canvas.h['+_doc.canvas.height+'].w['+_doc.canvas.width+']');
 =======
@@ -245,6 +270,9 @@ var windowLoad = (function() {
       vertex.posy = _rand(0,_this.canvas.height);
       //debug1
 >>>>>>> ui_formupdates
+=======
+      //debug1
+>>>>>>> create_tree
       console.log('vert:id['+vertex.id+']px['+vertex.posx+']py['+vertex.posy+']');
       _graph.graph.vertices.push(vertex);
     }
@@ -301,8 +329,13 @@ var windowLoad = (function() {
     for(var i=0; i<_graph.tree.n; i++) {
       var vertex = new _Vertex();
       vertex.id = i;
+<<<<<<< HEAD
       vertex.posx = _rand(0,_this.canvas.width);
       vertex.posy = _rand(0,_this.canvas.height);
+=======
+      vertex.posx = _rand(0,_doc.canvas.width);
+      vertex.posy = _rand(0,_doc.canvas.height);
+>>>>>>> create_tree
       //debug1
       console.log('node:id['+vertex.id+']px['+vertex.posx+']py['+vertex.posy+']');
       _graph.tree.vertices.push(vertex);
@@ -314,6 +347,7 @@ var windowLoad = (function() {
   };
   
   function _submit() {
+<<<<<<< HEAD
     var ary = _this.doc.getElementById('input_ary'),
       graph = _this.doc.getElementById('input_graph'),
       tree = _this.doc.getElementById('input_tree'),
@@ -337,6 +371,12 @@ var windowLoad = (function() {
     _graph.tree.edges = [];
     _graph.tree.nodes = [];
     _submit();
+=======
+    var vertices = _doc.form.getElementById(),
+      vertices = _doc.form.getElementById(),
+      vertices = _doc.form.getElementById();
+    if(_doc.form) { }
+>>>>>>> create_tree
   };
 
   return {
