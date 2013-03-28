@@ -292,12 +292,12 @@ var windowLoad = (function() {
       vertices = _doc.form.getElementById('input_vertices');
     if(graph.checked == true) {
       _graph.type = 'graph';
-      _graph.graph.n = vertices;
+      _graph.graph.n = vertices.value;
       _randgraph();
     } else if(tree.checked == true) {
       _graph.type = 'tree';
-      _graph.graph.a = ary;
-      _graph.graph.n = vertices;
+      _graph.graph.a = ary.value;
+      _graph.graph.n = vertices.value;
       _randtree();
     }
   };
