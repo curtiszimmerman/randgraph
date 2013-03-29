@@ -6,6 +6,7 @@
 var windowLoad = (function() {
 
   var _this = {
+    add: null,
     canvas: {
       canvas: null,
       height: 0,
@@ -15,7 +16,6 @@ var windowLoad = (function() {
     doc: null,
     font: null,
     form: null,
-    generate: null,
     reset: null,
     title: null
   };
@@ -48,14 +48,9 @@ var windowLoad = (function() {
       a: 0,
       edges: [],
       height: 0,
-      heightNode:0,
       heightTree: 0,
       n: 0,
       nodes: [],
-      root: {
-        posx: 0,
-        posy: 0
-      },
       widthNode: 0,
       widthTree: 0
     },
@@ -128,7 +123,7 @@ var windowLoad = (function() {
     _this.canvas.width = _this.canvas.canvas.width;
     _this.context = _this.canvas.canvas.getContext('2d');
     _this.form = _this.doc.getElementById('form');
-    _this.generate = _this.doc.getElementById('submit_generate');
+    _this.add = _this.doc.getElementById('submit_add');
     _this.reset = _this.doc.getElementById('submit_reset');
     _this.title = _this.doc.getElementById('title');
     var input_ary = _this.doc.getElementById('input_ary'),
@@ -137,7 +132,7 @@ var windowLoad = (function() {
       input_vertices = _this.doc.getElementById('input_vertices');
     input_graph.checked = true;
     input_ary.disabled = true;
-    event(_this.generate,'click',_submit);
+    event(_this.add,'click',_submit);
     event(_this.reset,'click',_submit_reset);
     event(input_graph,'click',function() {
       input_tree.checked = false;
@@ -288,8 +283,8 @@ var windowLoad = (function() {
     _this.context.strokeStyle = 'rgb(240,240,240);';
     _this.context.lineWidth = 4;
     _this.context.lineCap = 'round';
-    for(var i=0; i<_graph.tree.vertices.length; i++) {
-      var posx = _graph.tree.vertices[i].posx, posy = _graph.tree.vertices[i].posy;
+    for(var i=0; i<_graph.tree.nodes.length; i++) {
+      var posx = _graph.tree.nodes[i].posx, posy = _graph.tree.nodes[i].posy;
       _this.context.beginPath();
       _this.context.arc(posx,posy,2,0,(2*Math.PI),false);
       _this.context.stroke();
@@ -300,28 +295,24 @@ var windowLoad = (function() {
     // determine height of n-ary tree
     for(var h=0; Math.pow(_graph.tree.a,h)<_graph.tree.n; h++) {
       _graph.tree.height = h;
-      _graph.tree.width = Math.pow(_graph.tree.a,h);
     }
     _graph.tree.height++;
-    // calculate node positions, starting with root
+    // calculate basic tree metrics
     _graph.tree.heightTree = _this.canvas.height-20;
     _graph.tree.widthTree = _this.canvas.width-20;
-    _graph.tree.root.posx = (_graph.tree.widthTree)/2;
-    _graph.tree.root.posy = 10;
-    _graph.tree.heightNode = (_graph.tree.heightTree/(_graph.tree.height+1));
-    _graph.tree.widthNode = (_graph.tree.widthTree/(_graph.tree.width+1));
-    var nodesLeft = _graph.tree.n, posy = 10, posx = 0;
+    var nodesLeft = _graph.tree.n, posy = 10;
     for(var i=0; i<=_graph.tree.height; i++) {
-      //fix -- change this to pixels between levels
-      posy += Math.floor(_graph.tree.heightTree/(_graph.tree.height+1));
-      posx = _graph.tree.widthTree/(i+2);
+      // calculate offset from x=0 to display child nodes for this level
+      _graph.tree.widthNode = (_graph.tree.widthTree / (Math.pow(_graph.tree.a,i) + 1));
+      var levelOffset = _graph.tree.widthTree - (_graph.tree.widthNode * Math.pow(_graph.tree.a,i));
+      posy += Math.floor(_graph.tree.heightTree / (_graph.tree.height + 1));
+      var posx = levelOffset;
       for(var j=0; j<Math.pow(_graph.tree.a,i) && nodesLeft>0; j++) {
         nodesLeft--;
         var node = new _Vertex();
         // fencepost our way to a correct node id
-        node.id = _graph.tree.n-(nodesLeft+1);
-        //fix -- change this to the new maf
-        node.posx = (posx*(j+1));
+        node.id = _graph.tree.n - (nodesLeft + 1);
+        node.posx = Math.floor(posx + (j * _graph.tree.widthNode));
         node.posy = posy;
         //debug1
         console.log('node:id['+node.id+']px['+node.posx+']py['+node.posy+']');
