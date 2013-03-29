@@ -6,20 +6,17 @@
 var windowLoad = (function() {
 
   var _this = {
-    canvas: null,
+    canvas: {
+      canvas: null,
+      height: 0,
+      width: 0
+    },
     context: null,
     doc: null,
     font: null,
     form: null,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
     generate: null,
     reset: null,
->>>>>>> ui_formupdates
-=======
-    submit: null,
->>>>>>> create_tree
     title: null
   };
   
@@ -115,32 +112,13 @@ var windowLoad = (function() {
   };
 
   function init() {
-    _process();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    if(window.addEventListener) {
-      _doc.submit.addEventListener('click',_submit,false);
-    } else {
-      _doc.submit.attachEvent('click',_submit);
-    }
     console.log("windowLoad.init()");
-    //debug2 -- default to a graph for great justice
-    _graph.graph.n = prompt("number of vertices?");
-    _graph.type = 'graph';
->>>>>>> create_tree
-    if(_graph.type === 'graph') {
-      _randgraph_init();
-      _randgraph_gen();
-      _randgraph_draw();
-    } else if(_graph.type === 'tree') {
-      _randtree_init();
-      _randtree_gen();
-      _randtree_draw();
-=======
+    _process();
     _this.doc = document;
-    _this.canvas = _this.doc.getElementById('canvas');
-    _this.context = canvas.getContext('2d');
+    _this.canvas.canvas = _this.doc.getElementById('canvas');
+    _this.canvas.height = _this.canvas.canvas.height;
+    _this.canvas.width = _this.canvas.canvas.width;
+    _this.context = _this.canvas.canvas.getContext('2d');
     _this.form = _this.doc.getElementById('form');
     _this.generate = _this.doc.getElementById('submit_generate');
     _this.reset = _this.doc.getElementById('submit_reset');
@@ -170,21 +148,11 @@ var windowLoad = (function() {
       _randgraph();
     } else if(_graph.type === 'tree') {
       _randtree();
->>>>>>> ui_formupdates
     }
     */
   };
   
   function _process() {
-<<<<<<< HEAD
-=======
-    _doc.title = document.getElementById('title');
-    _doc.canvas = document.getElementById('canvas');
-    _doc.context = canvas.getContext('2d');
-    _doc.form = document.getElementById('form');
-    _doc.submit = document.getElementById('submit');
-    //fix default this to 3 or something, then steer user to option form
->>>>>>> create_tree
   };
   
   // default return type is int
@@ -259,20 +227,9 @@ var windowLoad = (function() {
     for(var i=0; i<_graph.graph.n; i++) {
       var vertex = new _Vertex();
       vertex.id = i;
-<<<<<<< HEAD
-      vertex.posx = _rand(0,_doc.canvas.width);
-      vertex.posy = _rand(0,_doc.canvas.height);
-<<<<<<< HEAD
-      //debug2
-      alert('_doc.canvas.h['+_doc.canvas.height+'].w['+_doc.canvas.width+']');
-=======
       vertex.posx = _rand(0,_this.canvas.width);
       vertex.posy = _rand(0,_this.canvas.height);
       //debug1
->>>>>>> ui_formupdates
-=======
-      //debug1
->>>>>>> create_tree
       console.log('vert:id['+vertex.id+']px['+vertex.posx+']py['+vertex.posy+']');
       _graph.graph.vertices.push(vertex);
     }
@@ -323,22 +280,19 @@ var windowLoad = (function() {
   };
   
   function _randtree_gen() {
-    _graph.tree.height = Math.floor(_graph.tree.n / _graph.tree.a);
+    for(var i=0; Math.pow(2,(i))<=_graph.tree.n; i++) {
+      _graph.tree.height = i;
+    }
     //debug1
     console.log('height:['+_graph.tree.height+'] ['+_graph.tree.a+']-ary tree with ['+_graph.tree.n+'] nodes');
     for(var i=0; i<_graph.tree.n; i++) {
-      var vertex = new _Vertex();
-      vertex.id = i;
-<<<<<<< HEAD
-      vertex.posx = _rand(0,_this.canvas.width);
-      vertex.posy = _rand(0,_this.canvas.height);
-=======
-      vertex.posx = _rand(0,_doc.canvas.width);
-      vertex.posy = _rand(0,_doc.canvas.height);
->>>>>>> create_tree
+      var node = new _Vertex();
+      node.id = i;
+      node.posx = _rand(0,_this.canvas.width);
+      node.posy = _rand(0,_this.canvas.height);
       //debug1
-      console.log('node:id['+vertex.id+']px['+vertex.posx+']py['+vertex.posy+']');
-      _graph.tree.vertices.push(vertex);
+      console.log('node:id['+node.id+']px['+node.posx+']py['+node.posy+']');
+      _graph.tree.nodes.push(node);
     }
   };
     
@@ -347,7 +301,6 @@ var windowLoad = (function() {
   };
   
   function _submit() {
-<<<<<<< HEAD
     var ary = _this.doc.getElementById('input_ary'),
       graph = _this.doc.getElementById('input_graph'),
       tree = _this.doc.getElementById('input_tree'),
@@ -358,8 +311,8 @@ var windowLoad = (function() {
       _randgraph();
     } else if(tree.checked == true) {
       _graph.type = 'tree';
-      _graph.graph.a = ary.value;
-      _graph.graph.n = vertices.value;
+      _graph.tree.a = ary.value;
+      _graph.tree.n = vertices.value;
       _randtree();
     }
   };
@@ -371,12 +324,6 @@ var windowLoad = (function() {
     _graph.tree.edges = [];
     _graph.tree.nodes = [];
     _submit();
-=======
-    var vertices = _doc.form.getElementById(),
-      vertices = _doc.form.getElementById(),
-      vertices = _doc.form.getElementById();
-    if(_doc.form) { }
->>>>>>> create_tree
   };
 
   return {
