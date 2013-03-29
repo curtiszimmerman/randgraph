@@ -48,8 +48,16 @@ var windowLoad = (function() {
       a: 0,
       edges: [],
       height: 0,
+      heightNode:0,
+      heightTree: 0,
       n: 0,
-      nodes: []
+      nodes: [],
+      root: {
+        posx: 0,
+        posy: 0
+      },
+      widthNode: 0,
+      widthTree: 0
     },
     type: null
   };
@@ -280,26 +288,48 @@ var windowLoad = (function() {
   };
   
   function _randtree_gen() {
-    for(var i=0; Math.pow(2,(i))<=_graph.tree.n; i++) {
+    // determine height of n-ary tree
+    for(var i=0; Math.pow(_graph.tree.a,i)<_graph.tree.n; i++) {
       _graph.tree.height = i;
+      _graph.tree.width = Math.pow(_graph.tree.a,i);
     }
-    //debug1
-    console.log('height:['+_graph.tree.height+'] ['+_graph.tree.a+']-ary tree with ['+_graph.tree.n+'] nodes');
-    for(var i=0; i<_graph.tree.n; i++) {
-      var node = new _Vertex();
-      node.id = i;
-      node.posx = _rand(0,_this.canvas.width);
-      node.posy = _rand(0,_this.canvas.height);
-      //debug1
-      console.log('node:id['+node.id+']px['+node.posx+']py['+node.posy+']');
-      _graph.tree.nodes.push(node);
+    _graph.tree.height++;
+    // calculate node positions, starting with root
+    _graph.tree.heightTree = _this.canvas.height-20;
+    _graph.tree.widthTree = _this.canvas.width-20;
+    _graph.tree.root.posx = (_graph.tree.widthTree)/2;
+    _graph.tree.root.posy = 10;
+    _graph.tree.heightNode = (_graph.tree.heightTree/(_graph.tree.height+1));
+    _graph.tree.widthNode = (_graph.tree.widthTree/(_graph.tree.width+1));
+    var nodesLeft = _graph.tree.n, posy = 10, posx = 0;
+    for(var i=0; i<=_graph.tree.height; i++) {
+      //fix -- change this to pixels between levels
+      posy += Math.floor(_graph.tree.heightTree/(_graph.tree.height+1));
+      posx = Math.floor(_graph.tree.widthTree/(i+1));
+      for(var j=0; j<Math.pow(_graph.tree.a,i) && nodesLeft>0; j++) {
+        nodesLeft--;
+        var node = new _Vertex();
+        // fencepost our way to a correct node id
+        node.id = _graph.tree.n-(nodesLeft+1);
+        //fix -- change this to the new maf
+        node.posx = (posx*(j+1));
+        node.posy = posy;
+        //debug1
+        console.log('node:id['+node.id+']px['+node.posx+']py['+node.posy+']');
+        _graph.tree.nodes.push(node);
+      }
     }
   };
     
   function _randtree_init() {
     _this.title.innerHTML = '<h2>N-ary Tree Generator (n = '+ _graph.tree.n +' nodes, a = '+_graph.tree.a+')</h2>';
+    //debug1
+    //_Vertex.prototype.;
   };
   
+  //fix this functionality of "adding" vertices to the graph is actually by 
+  //accident, since it draws the graph based on the vertices/edges arrays 
+  //and not by the number n
   function _submit() {
     var ary = _this.doc.getElementById('input_ary'),
       graph = _this.doc.getElementById('input_graph'),
@@ -319,8 +349,11 @@ var windowLoad = (function() {
   
   function _submit_reset() {
     _this.context.clearRect(0,0,_this.canvas.width,_this.canvas.height);
+    _graph.graph.n = 0;
     _graph.graph.vertices = [];
     _graph.graph.edges = [];
+    _graph.tree.a = 0;
+    _graph.tree.n = 0;
     _graph.tree.edges = [];
     _graph.tree.nodes = [];
     _submit();
