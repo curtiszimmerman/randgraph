@@ -285,13 +285,22 @@ var windowLoad = (function() {
   };
 
   function _randtree_draw() {
+    _this.context.strokeStyle = 'rgb(240,240,240);';
+    _this.context.lineWidth = 4;
+    _this.context.lineCap = 'round';
+    for(var i=0; i<_graph.tree.vertices.length; i++) {
+      var posx = _graph.tree.vertices[i].posx, posy = _graph.tree.vertices[i].posy;
+      _this.context.beginPath();
+      _this.context.arc(posx,posy,2,0,(2*Math.PI),false);
+      _this.context.stroke();
+    }
   };
   
   function _randtree_gen() {
     // determine height of n-ary tree
-    for(var i=0; Math.pow(_graph.tree.a,i)<_graph.tree.n; i++) {
-      _graph.tree.height = i;
-      _graph.tree.width = Math.pow(_graph.tree.a,i);
+    for(var h=0; Math.pow(_graph.tree.a,h)<_graph.tree.n; h++) {
+      _graph.tree.height = h;
+      _graph.tree.width = Math.pow(_graph.tree.a,h);
     }
     _graph.tree.height++;
     // calculate node positions, starting with root
@@ -305,7 +314,7 @@ var windowLoad = (function() {
     for(var i=0; i<=_graph.tree.height; i++) {
       //fix -- change this to pixels between levels
       posy += Math.floor(_graph.tree.heightTree/(_graph.tree.height+1));
-      posx = Math.floor(_graph.tree.widthTree/(i+1));
+      posx = _graph.tree.widthTree/(i+2);
       for(var j=0; j<Math.pow(_graph.tree.a,i) && nodesLeft>0; j++) {
         nodesLeft--;
         var node = new _Vertex();
