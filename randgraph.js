@@ -23,12 +23,6 @@ var windowLoad = (function() {
   /* begin graph-specific objects */
   function _Edge() {
     this.id = 0;
-    this.midpoint = {
-      x:0,
-      y:0
-    };
-    this.slope = 0;
-    this.weight = 0;
     this.verta = null;
     this.vertb = null;
     this.color = {
@@ -36,6 +30,15 @@ var windowLoad = (function() {
       g:0,
       b:0
     };
+  };
+  
+  function _EdgeWeighted() {
+    this.midpoint = {
+      x: 0,
+      y: 0
+    };
+    this.slope = 0;
+    this.weight = 0;
   };
   
   var _graph = {
@@ -252,7 +255,7 @@ var windowLoad = (function() {
         if(_graph.graph.vertices[i] == _graph.graph.vertices[j]) { place = false; }
         // otherwise, create a new edge and plunk 'er down!
         if(place) {
-          var edge = new _Edge();
+          var edge = new _EdgeWeighted();
           edge.id = _graph.graph.edges.length;
           edge.verta = _graph.graph.vertices[i];
           edge.vertb = _graph.graph.vertices[j];
@@ -271,12 +274,16 @@ var windowLoad = (function() {
   
   function _randgraph_init() {
     _this.title.innerHTML = '<h2>Complete Graph Generator (n = '+ _graph.graph.n +' vertices, random edge weight)</h2>';
+    // UPGRAYEDD edge to weighted edge with a midpoint
+    _EdgeWeighted.prototype = new _Edge();
   };
   
   function _randtree() {
     _randtree_init();
     _randtree_gen();
     _randtree_draw();
+    //debug1
+    console.log({}.constructor);
   };
 
   function _randtree_draw() {
@@ -305,7 +312,7 @@ var windowLoad = (function() {
       // calculate offset from x=0 to display child nodes for this level
       _graph.tree.widthNode = (_graph.tree.widthTree / (Math.pow(_graph.tree.a,i) + 1));
       var levelOffset = _graph.tree.widthTree - (_graph.tree.widthNode * Math.pow(_graph.tree.a,i));
-      posy += Math.floor(_graph.tree.heightTree / (_graph.tree.height + 1));
+      posy += Math.floor(_graph.tree.heightTree / (_graph.tree.height + 2));
       var posx = levelOffset;
       for(var j=0; j<Math.pow(_graph.tree.a,i) && nodesLeft>0; j++) {
         nodesLeft--;
@@ -328,6 +335,13 @@ var windowLoad = (function() {
         //debug1
         console.log('node:id['+node.id+']px['+node.posx+']py['+node.posy+']');
         _graph.tree.nodes.push(node);
+      }
+    }
+    // why don't you go ahead and come back some other time
+    for(var l=0; l<_graph.tree.nodes.length; l++) {
+      for(var m=0; m<_graph.tree.a; m++) {
+        var posx = _graph.tree.nodes[l].children[m].posx;
+        var posy = _graph.tree.nodes[l].children[m].posy;
       }
     }
   };
