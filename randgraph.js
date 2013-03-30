@@ -312,8 +312,19 @@ var windowLoad = (function() {
         var node = new _Vertex();
         // fencepost our way to a correct node id
         node.id = _graph.tree.n - (nodesLeft + 1);
+        node.level = i;
+        node.levelNode = j;
         node.posx = Math.floor(posx + (j * _graph.tree.widthNode));
         node.posy = posy;
+        // attach this node to its parent based on maf (and this node's parent to its kid)
+        for(var k=0; k<_graph.tree.nodes.length; k++) {
+          var parentNode = Math.floor(j/_graph.tree.a);
+          var parentLevel = i-1;
+          if((_graph.tree.nodes[k].level == parentLevel) && (_graph.tree.nodes[k].levelNode == parentNode)) {
+            node.parent = _graph.tree.nodes[k];
+            node.parent.children.push(node);
+          }
+        }
         //debug1
         console.log('node:id['+node.id+']px['+node.posx+']py['+node.posy+']');
         _graph.tree.nodes.push(node);
@@ -323,8 +334,11 @@ var windowLoad = (function() {
     
   function _randtree_init() {
     _this.title.innerHTML = '<h2>N-ary Tree Generator (n = '+ _graph.tree.n +' nodes, a = '+_graph.tree.a+')</h2>';
-    //debug1
-    //_Vertex.prototype.;
+    // upgrade our vertices to tree nodes
+    _Vertex.prototype.children = [];
+    _Vertex.prototype.level = 0;
+    _Vertex.prototype.levelNode = 0;
+    _Vertex.prototype.parent = null;
   };
   
   //fix this functionality of "adding" vertices to the graph is actually by 
