@@ -3,7 +3,7 @@
  * weighted edges between each vertex
  */
 
-var randGraph = (function() {
+var windowLoad = (function() {
 
   var _this = {
     add: null,
@@ -58,13 +58,6 @@ var randGraph = (function() {
       widthTree: 0
     },
     type: null
-  };
-  
-  function _Node() {
-    this.children = [];
-    this.level = 0;
-    this.levelNode = 0;
-    this.parent = null;
   };
   
   function _Vertex() {
@@ -290,9 +283,7 @@ var randGraph = (function() {
     _randtree_gen();
     _randtree_draw();
     //debug1
-    console.log(_Edge.constructor);
-    //debug1
-    console.log(_Edge.constructor.prototype);
+    console.log({}.constructor);
   };
 
   function _randtree_draw() {
@@ -362,8 +353,6 @@ var randGraph = (function() {
     _Vertex.prototype.level = 0;
     _Vertex.prototype.levelNode = 0;
     _Vertex.prototype.parent = null;
-    //fix convert this to proper prototyping
-    _Node.prototype = new _Vertex();
   };
   
   //fix this functionality of "adding" vertices to the graph is actually by 
@@ -405,4 +394,4 @@ var randGraph = (function() {
 }());
 
 // fire it up!
-randGraph.event(window,'load',randGraph.init);
+windowLoad.event(window,'load',windowLoad.init);
