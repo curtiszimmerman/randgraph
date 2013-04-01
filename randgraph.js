@@ -3,7 +3,7 @@
  * weighted edges between each vertex
  */
 
-var windowLoad = (function() {
+var randGraph = (function() {
 
   var _this = {
     add: null,
@@ -58,6 +58,13 @@ var windowLoad = (function() {
       widthTree: 0
     },
     type: null
+  };
+  
+  function _Node() {
+    this.children = [];
+    this.level = 0;
+    this.levelNode = 0;
+    this.parent = null;
   };
   
   function _Vertex() {
@@ -394,4 +401,4 @@ var windowLoad = (function() {
 }());
 
 // fire it up!
-windowLoad.event(window,'load',windowLoad.init);
+randGraph.event(window,'load',randGraph.init);
